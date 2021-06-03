@@ -1,0 +1,20 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+
+#root {
+  @apply relative h-screen bg-gray-800 w-screen;
+}
+
+.react-datepicker-wrapper {
+  @apply w-full;
+}
+
+.react-datepicker {
+  @apply justify-end;
+}
+
+/* body {
+  @apply font-sans;
+} */
+
+@import "tailwindcss/utilities";
