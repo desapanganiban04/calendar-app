@@ -37,6 +37,14 @@ const TaskDetail = (props) => {
     }));
   };
 
+  const handleDateChange = (e) => {
+    setForm((prevState) => ({
+      ...prevState,
+      ["date"]: e,
+    }));
+    console.log(form);
+  };
+
   const handleUpdate = (e) => {
     e.preventDefault();
     updateTask(id, form, () => {
@@ -49,10 +57,14 @@ const TaskDetail = (props) => {
     setOpenModal(true);
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   return (
     <>
       <div className="mt-4">
-        <div className="bg-gray-600 rounded-md shadow-md relative">
+        <div className="bg-gray-600 rounded-md shadow-md">
           <div className="pt-4 pl-4">
             <Link to="/">
               {/* <button className="bg-blue-50 px-5 py-3 text-sm shadow-sm font-medium tracking-wider border text-blue-600 rounded-full hover:shadow-lg hover:bg-blue-100">
@@ -79,7 +91,7 @@ const TaskDetail = (props) => {
             <form className="pt-6 pb-2 my-2 w-1/2" onSubmit={handleUpdate}>
               <div className="mb-4">
                 <label
-                  className="block text-sm font-bold mb-2 text-gray-300"
+                  className="block text-xl font-bold mb-2 text-gray-300"
                   htmlFor="title"
                 >
                   Title
@@ -95,7 +107,10 @@ const TaskDetail = (props) => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-bold mb-2" htmlFor="date">
+                <label
+                  className="block text-xl font-bold mb-2 text-gray-300"
+                  htmlFor="date"
+                >
                   Date
                 </label>
                 <DatePicker
@@ -103,9 +118,9 @@ const TaskDetail = (props) => {
                   name="date"
                   className="shadow appearance-none border rounded py-2 px-3 text-gray-900 w-full"
                   selected={
-                    task ? moment(task.date).toDate() : moment().toDate()
+                    form ? moment(form.date).toDate() : moment().toDate()
                   }
-                  onChange={handleOnChange}
+                  onChange={handleDateChange}
                 />
                 {/* <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900"
@@ -116,7 +131,7 @@ const TaskDetail = (props) => {
               </div>
               <div className="mb-6">
                 <label
-                  className="block text-sm font-bold mb-2"
+                  className="block text-xl font-bold mb-2 text-gray-300"
                   htmlFor="status"
                 >
                   Status
@@ -154,7 +169,9 @@ const TaskDetail = (props) => {
                 </div>
               </div>
             </form>
-            {openModal && <ConfirmationModal />}
+            {openModal && (
+              <ConfirmationModal handleCloseModal={handleCloseModal} />
+            )}
           </div>
         </div>
       </div>

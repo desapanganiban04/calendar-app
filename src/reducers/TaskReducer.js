@@ -54,6 +54,18 @@ export const TaskReducer = (state, action) => {
         status: "failed",
         error: action.payload,
       };
+      case "DELETE_TASK_SUCCESS":
+      return {
+        loading: false,
+        status: "success",
+        error: "",
+      };
+    case "DELETE_TASK_ERROR":
+      return {
+        loading: false,
+        status: "failed",
+        error: action.payload,
+      };
     default:
       return state;
   }

@@ -15,3 +15,7 @@ export async function getTaskDetail(id) {
 export async function putTask(id, values) {
   return await util.put(`/tasks/${id}`, values, {});
 }
+
+export async function deleteTask(id) {
+  return await util.delete(`/tasks/${id}`, {});
+}

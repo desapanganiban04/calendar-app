@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react";
 import { TaskReducer } from "../reducers/TaskReducer";
-import { getTasks, postTask, getTaskDetail, putTask } from "../service";
+import { getTasks, postTask, getTaskDetail, putTask, deleteTask } from "../service";
 
 export const initialState = {
   tasks: [],
@@ -14,7 +14,7 @@ export const TaskContext = createContext({ ...initialState });
 
 const TaskContextProvider = (props) => {
   const [store, dispatch] = useReducer(TaskReducer, initialState);
-  const { tasks, task, loading, status, error } = store;
+  const { tasks, task } = store;
 
   const fetchTasks = () => {
     const response = getTasks();
@@ -61,9 +61,21 @@ const TaskContextProvider = (props) => {
       });
   };
 
+  const removeTask = (id, callback = () => {}) => {
+    const response = deleteTask(id);
+    response
+      .then((res) => {
+        dispatch({ type: "DELETE_TASK_SUCCESS", payload: res.data });
+        callback();
+      })
+      .catch((err) => {
+        dispatch({ type: "DELETE_TASK_ERROR", payload: err.response });
+      });
+  };
+
   return (
     <TaskContext.Provider
-      value={{ tasks, task, fetchTasks, addTasks, showTask, updateTask }}
+      value={{ tasks, task, fetchTasks, addTasks, showTask, updateTask, removeTask }}
     >
       {props.children}
     </TaskContext.Provider>
