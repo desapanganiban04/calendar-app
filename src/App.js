@@ -1,9 +1,10 @@
-import AddTask from "./components/AddTask";
 import Navbar from "./components/Navbar";
 import TaskDetail from "./components/TaskDetail";
 import TaskList from "./components/TaskList";
 import TaskContextProvider from "./contexts/TaskContext";
 import { Switch, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
 
         {/* <AddTask /> */}
       </TaskContextProvider>
+      <ToastContainer/>
     </div>
   );
 }

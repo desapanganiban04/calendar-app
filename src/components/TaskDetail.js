@@ -27,7 +27,6 @@ const TaskDetail = (props) => {
       date: task ? moment(task.date).toDate() : moment().toDate(),
       status: task?.status ?? false,
     });
-    // console.log(form);
   }, [task]);
 
   const handleOnChange = ({ target: { name, value } }) => {
@@ -40,9 +39,8 @@ const TaskDetail = (props) => {
   const handleDateChange = (e) => {
     setForm((prevState) => ({
       ...prevState,
-      ["date"]: e,
+      "date": e,
     }));
-    console.log(form);
   };
 
   const handleUpdate = (e) => {
@@ -67,9 +65,6 @@ const TaskDetail = (props) => {
         <div className="bg-gray-600 rounded-md shadow-md">
           <div className="pt-4 pl-4">
             <Link to="/">
-              {/* <button className="bg-blue-50 px-5 py-3 text-sm shadow-sm font-medium tracking-wider border text-blue-600 rounded-full hover:shadow-lg hover:bg-blue-100">
-                <i className="fas fa-chevron-left"></i>
-              </button> */}
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -140,7 +135,7 @@ const TaskDetail = (props) => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 mb-3"
                   id="status"
                   name="status"
-                  value={form?.status ?? ""}
+                  value={form.status}
                   onChange={handleOnChange}
                 >
                   <option value="Done">Done</option>

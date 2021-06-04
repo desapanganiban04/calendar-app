@@ -18,7 +18,7 @@ const ConfirmationModal = ({ handleCloseModal = () => {} }) => {
   };
 
   return (
-    <div className="h-screen w-screen backdrop-filter backdrop-grayscale backdrop-blur-sm backdrop-contrast-150 flex flex-col items-center justify-center bg-teal-lightest absolute z-50 -top-0">
+    <div className="h-screen w-screen backdrop-filter backdrop-grayscale backdrop-blur-sm backdrop-contrast-150 flex flex-col items-center justify-center absolute z-50 -top-0">
       <div className="absolute flex items-center justify-center bg-modal">
         <div className="bg-white rounded shadow-2xl p-8 m-4 max-w-xs max-h-full text-center border-gray-200">
           <div className="m-4  items-end">

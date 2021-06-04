@@ -1,6 +1,14 @@
 import { createContext, useReducer } from "react";
 import { TaskReducer } from "../reducers/TaskReducer";
-import { getTasks, postTask, getTaskDetail, putTask, deleteTask } from "../service";
+import {
+  getTasks,
+  postTask,
+  getTaskDetail,
+  putTask,
+  deleteTask,
+} from "../service";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 
 export const initialState = {
   tasks: [],
@@ -32,6 +40,14 @@ const TaskContextProvider = (props) => {
     response
       .then((res) => {
         dispatch({ type: "ADD_TASK_SUCCESS", payload: res.data });
+        toast.success("Task has been added.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       })
       .catch((err) => {
         dispatch({ type: "ADD_TASK_ERROR", payload: err.response });
@@ -54,10 +70,26 @@ const TaskContextProvider = (props) => {
     response
       .then((res) => {
         dispatch({ type: "UPDATE_TASK_SUCCESS", payload: res.data });
+        toast.success("Task has been updated.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         callback();
       })
       .catch((err) => {
         dispatch({ type: "UPDATE_TASK_ERROR", payload: err.response });
+        toast.error("Something went wrong.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       });
   };
 
@@ -66,16 +98,40 @@ const TaskContextProvider = (props) => {
     response
       .then((res) => {
         dispatch({ type: "DELETE_TASK_SUCCESS", payload: res.data });
+        toast.success("Task has been deleted.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         callback();
       })
       .catch((err) => {
         dispatch({ type: "DELETE_TASK_ERROR", payload: err.response });
+        toast.error("Something went wrong.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       });
   };
 
   return (
     <TaskContext.Provider
-      value={{ tasks, task, fetchTasks, addTasks, showTask, updateTask, removeTask }}
+      value={{
+        tasks,
+        task,
+        fetchTasks,
+        addTasks,
+        showTask,
+        updateTask,
+        removeTask,
+      }}
     >
       {props.children}
     </TaskContext.Provider>
