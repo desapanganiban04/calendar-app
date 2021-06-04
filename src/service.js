@@ -1,7 +1,15 @@
 import util from "./util";
 
-export async function getTasks() {
-  return await util.get("/tasks");
+export async function getTasks(params) {
+  if (params.action === "filter") {
+    if (params.value === "" || params.value === "All") {
+      return await util.get("/tasks");
+    } else {
+      return await util.get(`/tasks?${params.filter}=${params.value}`);
+    }
+  } else {
+    return await util.get("/tasks");
+  }
 }
 
 export async function postTask(values) {

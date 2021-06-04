@@ -25,13 +25,25 @@ const TaskContextProvider = (props) => {
   const { tasks, task } = store;
 
   const fetchTasks = () => {
-    const response = getTasks();
+    const response = getTasks({action: 'fetch'});
     response
       .then((res) => {
         dispatch({ type: "FETCH_LIST_SUCCESS", payload: res.data });
       })
       .catch((err) => {
         dispatch({ type: "FETCH_LIST_ERROR", payload: err.response });
+      });
+  };
+
+  const filterTasks = (filter) => {
+    const response = getTasks(filter);
+    response
+      .then((res) => {
+        console.log(res.data);
+        dispatch({ type: "FILTER_LIST_SUCCESS", payload: res.data });
+      })
+      .catch((err) => {
+        dispatch({ type: "FILTER_LIST_ERROR", payload: err.response });
       });
   };
 
@@ -93,6 +105,8 @@ const TaskContextProvider = (props) => {
       });
   };
 
+
+
   const removeTask = (id, callback = () => {}) => {
     const response = deleteTask(id);
     response
@@ -131,6 +145,7 @@ const TaskContextProvider = (props) => {
         showTask,
         updateTask,
         removeTask,
+        filterTasks
       }}
     >
       {props.children}

@@ -1,8 +1,8 @@
-export const TaskReducer = (state, action) => {
-  switch (action.type) {
+export const TaskReducer = (state, {payload, type}) => {
+  switch (type) {
     case "FETCH_LIST_SUCCESS":
       return {
-        tasks: action.payload,
+        tasks: payload,
         loading: false,
         status: "success",
         error: "",
@@ -12,7 +12,7 @@ export const TaskReducer = (state, action) => {
         tasks: [],
         loading: false,
         status: "failed",
-        error: action.payload,
+        error: payload,
       };
     case "ADD_TASK_SUCCESS":
       return {
@@ -24,11 +24,11 @@ export const TaskReducer = (state, action) => {
       return {
         loading: false,
         status: "failed",
-        error: action.payload,
+        error: payload,
       };
     case "FETCH_DETAIL_SUCCESS":
       return {
-        task: action.payload,
+        task: payload,
         loading: false,
         status: "success",
         error: "",
@@ -38,11 +38,11 @@ export const TaskReducer = (state, action) => {
         task: {},
         loading: false,
         status: "failed",
-        error: action.payload,
+        error: payload,
       };
     case "UPDATE_TASK_SUCCESS":
       return {
-        task: action.payload,
+        task: payload,
         loading: false,
         status: "success",
         error: "",
@@ -52,7 +52,7 @@ export const TaskReducer = (state, action) => {
         task: {},
         loading: false,
         status: "failed",
-        error: action.payload,
+        error: payload,
       };
       case "DELETE_TASK_SUCCESS":
       return {
@@ -64,8 +64,22 @@ export const TaskReducer = (state, action) => {
       return {
         loading: false,
         status: "failed",
-        error: action.payload,
+        error: payload,
       };
+      case "FILTER_LIST_SUCCESS":
+        return {
+          tasks: payload,
+          loading: false,
+          status: "success",
+          error: "",
+        };
+      case "FILTER_LIST_ERROR":
+        return {
+          tasks: [],
+          loading: false,
+          status: "failed",
+          error: payload,
+        };
     default:
       return state;
   }
