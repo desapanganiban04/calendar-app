@@ -8,7 +8,7 @@ import {
   deleteTask,
 } from "../service";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'
+import "react-toastify/dist/ReactToastify.css";
 
 export const initialState = {
   tasks: [],
@@ -25,7 +25,7 @@ const TaskContextProvider = (props) => {
   const { tasks, task } = store;
 
   const fetchTasks = () => {
-    const response = getTasks({action: 'fetch'});
+    const response = getTasks({ action: "fetch" });
     response
       .then((res) => {
         dispatch({ type: "FETCH_LIST_SUCCESS", payload: res.data });
@@ -105,8 +105,6 @@ const TaskContextProvider = (props) => {
       });
   };
 
-
-
   const removeTask = (id, callback = () => {}) => {
     const response = deleteTask(id);
     response
@@ -145,7 +143,7 @@ const TaskContextProvider = (props) => {
         showTask,
         updateTask,
         removeTask,
-        filterTasks
+        filterTasks,
       }}
     >
       {props.children}

@@ -11,7 +11,7 @@ const TaskDetail = (props) => {
   const { showTask, task, updateTask } = useContext(TaskContext);
   const [form, setForm] = useState({
     title: "",
-    date: moment().toDate(),
+    date: moment(task.date).format("l"),
     status: "",
   });
   const [openModal, setOpenModal] = useState(false);
@@ -24,7 +24,7 @@ const TaskDetail = (props) => {
   useEffect(() => {
     setForm({
       title: task?.title ?? "",
-      date: task ? moment(task.date).toDate() : moment().toDate(),
+      date: task ? moment(task.date).format("l") : moment().format("l"),
       status: task?.status ?? false,
     });
   }, [task]);
@@ -39,7 +39,7 @@ const TaskDetail = (props) => {
   const handleDateChange = (e) => {
     setForm((prevState) => ({
       ...prevState,
-      "date": e,
+      date: moment(e).format("l"),
     }));
   };
 

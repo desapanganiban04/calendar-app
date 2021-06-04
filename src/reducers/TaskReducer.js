@@ -1,4 +1,4 @@
-export const TaskReducer = (state, {payload, type}) => {
+export const TaskReducer = (state, { payload, type }) => {
   switch (type) {
     case "FETCH_LIST_SUCCESS":
       return {
@@ -54,7 +54,7 @@ export const TaskReducer = (state, {payload, type}) => {
         status: "failed",
         error: payload,
       };
-      case "DELETE_TASK_SUCCESS":
+    case "DELETE_TASK_SUCCESS":
       return {
         loading: false,
         status: "success",
@@ -66,20 +66,20 @@ export const TaskReducer = (state, {payload, type}) => {
         status: "failed",
         error: payload,
       };
-      case "FILTER_LIST_SUCCESS":
-        return {
-          tasks: payload,
-          loading: false,
-          status: "success",
-          error: "",
-        };
-      case "FILTER_LIST_ERROR":
-        return {
-          tasks: [],
-          loading: false,
-          status: "failed",
-          error: payload,
-        };
+    case "FILTER_LIST_SUCCESS":
+      return {
+        tasks: payload,
+        loading: false,
+        status: "success",
+        error: "",
+      };
+    case "FILTER_LIST_ERROR":
+      return {
+        tasks: [],
+        loading: false,
+        status: "failed",
+        error: payload,
+      };
     default:
       return state;
   }
