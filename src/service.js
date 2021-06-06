@@ -1,22 +1,16 @@
 import util from "./util";
 
-export async function getTasks(params) {
-  if (params.action === "filter") {
-    if (params.value === "" || params.value === "All") {
-      return await util.get("/tasks");
-    } else {
-      return await util.get(`/tasks?${params.filter}=${params.value}`);
-    }
-  } else {
-    return await util.get("/tasks");
-  }
+export async function get(params, url) {
+  return await util.get(url, {
+    params,
+  });
 }
 
-export async function postTask(values) {
+export async function post(values) {
   return await util.post("/tasks", values, {});
 }
 
-export async function getTaskDetail(id) {
+export async function getDetails(id) {
   return await util.get(`/tasks/${id}`);
 }
 
@@ -24,6 +18,6 @@ export async function putTask(id, values) {
   return await util.put(`/tasks/${id}`, values, {});
 }
 
-export async function deleteTask(id) {
-  return await util.delete(`/tasks/${id}`, {});
+export async function remove(url) {
+  return await util.delete(url, {});
 }

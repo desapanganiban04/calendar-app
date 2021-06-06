@@ -1,16 +1,13 @@
-import { useContext } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import { TaskContext } from "../contexts/TaskContext";
+import { useDeleteTask } from "../hooks";
 
-const ConfirmationModal = ({ handleCloseModal = () => {} }) => {
-  const history = useHistory();
-  const { removeTask } = useContext(TaskContext);
-  const { id } = useParams();
+const DeleteTask = ({ handleCloseModal, callBack, selected }) => {
+  const [deleteData] = useDeleteTask();
 
-  const handleOnConfirmation = ({ target: { name } }) => {
+  const handleOnConfirm = ({ target: { name } }) => {
     if (name === "deleteBtn") {
-      removeTask(id, () => {
-        history.push("/");
+      deleteData(selected, () => {
+        callBack();
+        handleCloseModal();
       });
     } else {
       handleCloseModal();
@@ -18,12 +15,12 @@ const ConfirmationModal = ({ handleCloseModal = () => {} }) => {
   };
 
   return (
-    <div className="h-screen w-screen backdrop-filter backdrop-grayscale backdrop-blur-sm backdrop-contrast-150 flex flex-col items-center justify-center absolute z-50 -top-0">
+    <div className="h-full w-full bg-black bg-opacity-50 flex flex-col items-center justify-center absolute z-50 inset-0">
       <div className="absolute flex items-center justify-center bg-modal">
-        <div className="bg-white rounded shadow-2xl p-8 m-4 max-w-xs max-h-full text-center border-gray-200">
+        <div className="bg-white rounded p-8 m-4 max-w-xs max-h-full text-center">
           <div className="m-4  items-end">
             <svg
-              class="w-full h-20 stroke-current text-red-400"
+              className="w-full h-20 stroke-current text-red-400"
               fill="none"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
@@ -48,15 +45,15 @@ const ConfirmationModal = ({ handleCloseModal = () => {} }) => {
           <div className="flex justify-between">
             <button
               name="cancelBtn"
-              className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 border-b-4 border-gray-700 hover:border-gray-400 rounded"
-              onClick={handleOnConfirmation}
+              className="bg-gray-600 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded"
+              onClick={handleOnConfirm}
             >
               Cancel
             </button>
             <button
               name="deleteBtn"
-              className="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-400 rounded"
-              onClick={handleOnConfirmation}
+              className="bg-red-600 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
+              onClick={handleOnConfirm}
             >
               Delete
             </button>
@@ -67,4 +64,4 @@ const ConfirmationModal = ({ handleCloseModal = () => {} }) => {
   );
 };
 
-export default ConfirmationModal;
+export default DeleteTask;

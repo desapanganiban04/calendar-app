@@ -1,71 +1,106 @@
-import { useContext, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { TaskContext } from "../contexts/TaskContext";
 import { isEmpty } from "lodash";
 import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useGetList, useStickyState } from "../hooks";
 import AddTask from "./AddTask";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import DeleteTask from "./DeleteTask";
+import Pagination from "./Pagination";
 
-const TaskList = () => {
-  const { tasks, fetchTasks, filterTasks } = useContext(TaskContext);
-  const location = useLocation();
-  const [openModal, setOpenModal] = useState(false);
-  const [dateSelected, setDateSelected] = useState(moment().toDate());
+const INIT_STATE = {
+  date: "",
+  title: "",
+  status: "",
+};
+
+const DEFAULT_FILTER = {
+  page: 1,
+  limit: 5,
+};
+
+function TaskList() {
+  const [filter, setFilter] = useState(INIT_STATE);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [toBeDeleted, setToBeDeleted] = useState();
+  const [defaultFilter, setDefaultFilter] = useStickyState(
+    DEFAULT_FILTER,
+    "filter"
+  );
+  const [, list, currentPage] = useGetList(defaultFilter);
+
+  const handleChangePage = (value) => {
+    setDefaultFilter({ ...defaultFilter, page: value });
+  };
+
+  const handleOnChange = ({ target: { name, value } }) => {
+    setFilter({
+      ...filter,
+      [name]: value,
+    });
+  };
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    setDefaultFilter({
+      ...defaultFilter,
+      ...filter,
+      page: 1,
+    });
+  };
+
+  const handleOpenAddModal = () => {
+    setOpenAddModal(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setOpenAddModal(false);
+  };
+
+  const handleOpenDeleteModal = (id) => {
+    setToBeDeleted(id);
+    setOpenDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const handleOnResetFilterCallBack = () => {
+    setDefaultFilter(DEFAULT_FILTER);
+    setFilter(INIT_STATE);
+  };
+
+  const handleOnRetainFilterCallBack = () => {
+    setDefaultFilter({
+      ...defaultFilter,
+      ...filter,
+    });
+  };
 
   useEffect(() => {
-    fetchTasks();
-  }, [location]);
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
-  const handleSearch = ({ target: { value } }) => {
-    filterTasks({ filter: "title", value: value, action: "filter" });
-  };
-
-  const handleFilter = ({ target: { name, value } }) => {
-    const filter = { filter: name, value: value, action: "filter" };
-    filterTasks(filter);
-  };
-
-  const handleChangeDate = (e) => {
-    console.log(e);
-    setDateSelected(moment(e).toDate());
-    const filter = {
-      filter: "date",
-      value: moment(e).format("l"),
-      action: "filter",
-    };
-    filterTasks(filter);
-  };
+    setFilter({
+      ...defaultFilter,
+    });
+  }, [defaultFilter]);
 
   return (
-    <div className="grid grid-cols-2 gap-6">
-      <div className="mt-4">
-        <div className="flex flex-col h-96 p-4 bg-gray-600 rounded-md shadow-md">
-          <Calendar
-            className="w-full h-full rounded"
-            value={dateSelected}
-            onChange={handleChangeDate}
-          />
-        </div>
-      </div>
-      <div className="my-4 mt-4 w-full">
-        <section className="flex-initial items-center justify-center h-96 bg-gray-600 rounded-md shadow-md overflow-y-auto">
-          <div className="p-3 m-3 bg-gray-800 rounded-md">
-            <div className="my-2 flex sm:flex-row">
+    <div className="grid my-4 mt-4">
+      <section className="flex-initial items-center justify-center bg-gray-400 rounded-md shadow-md pt-1">
+        <div className="p-3 m-3 bg-gray-800 rounded-md">
+          <div className="my-2 flex sm:flex-row flex-col justify-center">
+            <form onSubmit={handleOnSubmit} className="flex">
               <div className="flex flex-row mb-1 sm:mb-0">
                 <div className="relative">
-                  <select className="appearance-none h-full rounded-l border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                    <option>5</option>
-                    <option>10</option>
-                    <option>20</option>
+                  <select
+                    name="limit"
+                    className="appearance-none h-full rounded-l border block w-full lg:w-auto bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    onChange={handleOnChange}
+                    value={filter?.limit ?? 5}
+                  >
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg
@@ -80,13 +115,14 @@ const TaskList = () => {
                 <div className="relative">
                   <select
                     name="status"
-                    className="appearance-none h-full rounded-r border-t sm:rounded-r-none sm:border-r-0 border-r border-b block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-l focus:border-r focus:bg-white focus:border-gray-500"
-                    onChange={handleFilter}
+                    className="appearance-none h-full rounded-r border-t sm:rounded-r-none sm:border-r-0 border-r border-b block w-full sm:w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-l focus:border-r focus:bg-white focus:border-gray-500"
+                    onChange={handleOnChange}
+                    value={filter?.status ?? ""}
                   >
-                    <option value="All">All</option>
-                    <option value="Done">Done</option>
-                    <option value="On-going">On-going</option>
-                    <option value="Pending">Pending</option>
+                    <option value="">All</option>
+                    <option value="done">Done</option>
+                    <option value="on-going">On-going</option>
+                    <option value="pending">Pending</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg
@@ -99,7 +135,7 @@ const TaskList = () => {
                   </div>
                 </div>
               </div>
-              <div className="block relative">
+              <div className="relative">
                 <span className="h-full absolute inset-y-0 left-0 flex items-center pl-2">
                   <svg
                     viewBox="0 0 24 24"
@@ -109,58 +145,93 @@ const TaskList = () => {
                   </svg>
                 </span>
                 <input
-                  placeholder="Search"
-                  className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
-                  onChange={handleSearch}
+                  placeholder="title"
+                  name="title"
+                  className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full sm:w-36 md:w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+                  onChange={handleOnChange}
+                  value={filter?.title ?? ""}
                 />
               </div>
-              <div className=" w-10 text-center bg-white rounded">
-                <i
-                  class="far fa-calendar-plus text-black text-2xl"
-                  onClick={handleOpenModal}
-                ></i>
+              <div className="relative">
+                <input
+                  type="submit"
+                  value="Filter"
+                  className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+                />
               </div>
+            </form>
+            <div className="relative w-10 text-center bg-white rounded">
+              <i
+                className="far fa-plus-square text-black text-2xl"
+                onClick={handleOpenAddModal}
+              ></i>
             </div>
           </div>
-          {!isEmpty(tasks) ? (
-            tasks.map((task) => (
-              <Link to={`/${task.id}`} key={task.id}>
-                <div className="flex items-center justify-center py-2">
-                  <div className="max-w-lg w-80 rounded-lg shadow-lg p-4 bg-gray-800">
-                    <h3 className="font-semibold text-lg tracking-wide text-gray-200">
-                      {task.title}
-                    </h3>
-                    <span
-                      className={`items-center justify-center px-2 py-1 mr-2 text-xs font-bold rounded-full ${
-                        task.status === "Done"
-                          ? " text-green-100 bg-green-600"
-                          : task.status === "On-going"
-                          ? "text-yellow-100 bg-yellow-600"
-                          : "text-red-100 bg-red-600"
-                      }`}
-                    >
-                      {task.status}
-                    </span>
-                    <div className="mt-2">
-                      <span className=" text-gray-200">
-                        {moment(task.date).format("L")}
-                      </span>
-                      {/* </a> */}
-                    </div>
+        </div>
+
+        <div className="flex-none h-80 md:h-72 overflow-y-auto">
+          {!isEmpty(list) ? (
+            list.map((task) => (
+              <div
+                key={task.id}
+                className="flex items-center justify-center py-2"
+              >
+                <div className="max-w-lg w-80 rounded-lg shadow-lg p-4 bg-gray-800">
+                  <div className="text-right">
+                    <i
+                      className="fas fa-times-circle text-red-600 hover:text-red-400 text-lg cursor-pointer "
+                      onClick={() => handleOpenDeleteModal(task.id)}
+                    ></i>
                   </div>
+                  <Link to={`/${task.id}`}>
+                    <div>
+                      <h3 className="font-semibold text-lg tracking-wide text-gray-200 capitalize">
+                        {task.title}
+                      </h3>
+                      <span
+                        className={`items-center justify-center px-2 py-1 mr-2 text-xs font-bold rounded-full ${
+                          task.status === "done"
+                            ? " text-green-100 bg-green-600"
+                            : task.status === "on-going"
+                            ? "text-yellow-100 bg-yellow-600"
+                            : "text-red-100 bg-red-600"
+                        }`}
+                      >
+                        {task.status}
+                      </span>
+                      <div className="mt-2">
+                        <span className=" text-gray-200">
+                          {moment(task.date).format("L")}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
+                {openDeleteModal && (
+                  <DeleteTask
+                    handleCloseModal={handleCloseDeleteModal}
+                    callBack={handleOnRetainFilterCallBack}
+                    selected={toBeDeleted}
+                  />
+                )}
+              </div>
             ))
           ) : (
             <div className="flex items-center justify-center py-4">
               <h1 className=" text-white">No Task for today.</h1>
             </div>
           )}
-        </section>
-      </div>
-      {openModal && <AddTask handleCloseModal={handleCloseModal} />}
+        </div>
+        <Pagination page={currentPage} onChange={handleChangePage} />
+      </section>
+      {openAddModal && (
+        <AddTask
+          handleCloseModal={handleCloseAddModal}
+          callBack={handleOnResetFilterCallBack}
+        />
+      )}
     </div>
   );
-};
+}
 
 export default TaskList;

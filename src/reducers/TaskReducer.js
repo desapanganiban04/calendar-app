@@ -1,9 +1,18 @@
 export const TaskReducer = (state, { payload, type }) => {
   switch (type) {
+    case "FETCH_LIST_LOADING":
+      return {
+        tasks: [],
+        loading: payload?.loading,
+        currentPage: payload?.pagination,
+        pageCount: 1,
+      };
     case "FETCH_LIST_SUCCESS":
       return {
-        tasks: payload,
+        tasks: payload?.data,
         loading: false,
+        currentPage: payload?.pagination,
+        pageCount: payload?.totalPages,
         status: "success",
         error: "",
       };
@@ -25,6 +34,12 @@ export const TaskReducer = (state, { payload, type }) => {
         loading: false,
         status: "failed",
         error: payload,
+      };
+    case "FETCH_DETAIL_LOADING":
+      return {
+        task: {},
+        loading: payload?.loading,
+        currentPage: payload?.pagination,
       };
     case "FETCH_DETAIL_SUCCESS":
       return {
