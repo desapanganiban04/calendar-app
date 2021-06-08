@@ -170,12 +170,14 @@ function TaskList() {
                 />
               </div>
             </form>
-            <div className="relative w-10 text-center bg-white rounded">
-              <i
-                className="far fa-plus-square text-black font-bold text-center text-2xl"
-                onClick={handleOpenAddModal}
-              ></i>
-            </div>
+            <button
+              type="button"
+              className="relative w-20 text-center bg-green-500 rounded flex items-center gap-2 px-2 justify-center text-white"
+              onClick={handleOpenAddModal}
+            >
+              <i className="far fa-plus-square text-2xl"></i>
+              Add
+            </button>
           </div>
         </div>
 

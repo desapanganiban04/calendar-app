@@ -11,7 +11,7 @@ function App() {
     <div className="flex flex-col flex-1">
       <TaskContextProvider>
         <Navbar />
-        <div className="pt-2 px-40 lg:px-64 sm:px-16">
+        <div className="pt-2 px-40 lg:px-48 sm:px-16">
           <Switch>
             <Route exact path="/" component={TaskList} />
             <Route path="/:id" component={TaskDetail} />
