@@ -89,7 +89,7 @@ function TaskList() {
       <section className="flex-initial items-center justify-center bg-gray-400 rounded-md shadow-md pt-1">
         <div className="p-3 m-3 bg-gray-800 rounded-md">
           <div className="my-2 flex sm:flex-row flex-col justify-center">
-            <form onSubmit={handleOnSubmit} className="flex">
+            <form onSubmit={handleOnSubmit} className="flex text-center">
               <div className="flex flex-row mb-1 sm:mb-0">
                 <div className="relative">
                   <select
@@ -147,22 +147,32 @@ function TaskList() {
                 <input
                   placeholder="title"
                   name="title"
-                  className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full sm:w-36 md:w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+                  className="h-full appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full sm:w-36 md:w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
                   onChange={handleOnChange}
                   value={filter?.title ?? ""}
                 />
               </div>
               <div className="relative">
                 <input
+                  className="h-full appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full sm:w-36 md:w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+                  id="date"
+                  name="date"
+                  type="date"
+                  value={filter?.date ?? moment()}
+                  onChange={handleOnChange}
+                />
+              </div>
+              <div className="relative">
+                <input
                   type="submit"
                   value="Filter"
-                  className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+                  className="h-full appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
                 />
               </div>
             </form>
             <div className="relative w-10 text-center bg-white rounded">
               <i
-                className="far fa-plus-square text-black text-2xl"
+                className="far fa-plus-square text-black font-bold text-center text-2xl"
                 onClick={handleOpenAddModal}
               ></i>
             </div>
